@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MiniTask - Simple Todo App</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>MiniTask</h1>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Input Section -->
+            <div class="input-section">
+                <input type="text" class="todo-input" placeholder="Add a new task..." id="todoInput" />
+                <button class="add-btn" id="addBtn">Add</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats" id="stats">
+                <span>Total: <span id="totalCount">0</span></span>
+                <span>Completed: <span id="completedCount">0</span></span>
+            </div>
+
+            <!-- Todo List -->
+            <ul class="todo-list" id="todoList">
+                <div class="empty-state" id="emptyState">
+                    <img src="https://placehold.co/80x80" alt="Empty task list" />
+                    <p>No tasks yet. Add one above!</p>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
