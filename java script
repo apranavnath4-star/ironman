@@ -1,0 +1,90 @@
+// Data storage
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+// DOM elements
+const todoInput = document.getElementById('todoInput');
+const todoList = document.getElementById('todoList');
+const emptyState = document.getElementById('emptyState');
+const totalCount = document.getElementById('totalCount');
+const completedCount = document.getElementById('completedCount');
+const addBtn = document.getElementById('addBtn');
+
+// Function to add a new todo
+function addTodo() {
+    const text = todoInput.value.trim();
+    if (text) {
+        const todo = {
+            id: Date.now(),
+            text: text,
+            completed: false,
+            createdAt: new Date().toISOString()
+        };
+        
+        todos.unshift(todo); // Add to beginning of array
+        saveTodos();
+        renderTodos();
+        todoInput.value = '';
+        todoInput.focus();
+    }
+}
+
+// Function to toggle todo completion
+function toggleTodo(id) {
+    todos = todos.map(todo => 
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    );
+    saveTodos();
+    renderTodos();
+}
+
+// Function to delete a todo
+function deleteTodo(id) {
+    todos = todos.filter(todo => todo.id !== id);
+    saveTodos();
+    renderTodos();
+}
+
+// Function to save todos to localStorage
+function saveTodos() {
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+// Function to render todos
+function renderTodos() {
+    if (todos.length === 0) {
+        emptyState.style.display = 'block';
+        todoList.innerHTML = '';
+    } else {
+        emptyState.style.display = 'none';
+        todoList.innerHTML = todos.map(todo => `
+            <li class="todo-item">
+                <input type="checkbox" class="todo-checkbox" 
+                       ${todo.completed ? 'checked' : ''} 
+                       onchange="toggleTodo(${todo.id})" />
+                <span class="todo-text ${todo.completed ? 'completed' : ''}">
+                    ${todo.text}
+                </span>
+                <button class="delete-btn" onclick="deleteTodo(${todo.id})">
+                    ×
+                </button>
+            </li>
+        `).join('');
+    }
+    
+    // Update stats
+    totalCount.textContent = todos.length;
+    completedCount.textContent = todos.filter(todo => todo.completed).length;
+}
+
+// Event listener for Enter key
+todoInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        addTodo();
+    }
+});
+
+// Event listener for Add button
+addBtn.addEventListener('click', addTodo);
+
+// Initial render
+renderTodos();
