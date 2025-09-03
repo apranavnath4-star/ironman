@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Ticket Booking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-white mb-8">Event Ticket Booking System</h1>
+
+        <div id="flow-chart" class="flow-chart">
+            <div id="start" class="step active">
+                <h2>Start</h2>
+                <button class="btn btn-primary mt-2" onclick="nextStep('home')">Begin</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="home" class="step" style="display: none;">
+                <h2>Home Page</h2>
+                <p>Welcome to our ticket booking system!</p>
+                <button class="btn btn-primary" onclick="nextStep('login')">Continue</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="login" class="step" style="display: none;">
+                <h2>Login / Register</h2>
+                <form id="login-form">
+                    <input type="email" class="form-input" placeholder="Email" required>
+                    <input type="password" class="form-input" placeholder="Password" required>
+                    <div class="flex justify-between mt-4">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="button" class="btn btn-secondary">Register</button>
+                    </div>
+                </form>
+            </div>
+            <div class="arrow"></div>
+            <div id="events" class="step" style="display: none;">
+                <h2>View Events</h2>
+                <div class="events">
+                    <div class="event" onclick="selectEvent('Concert')">Concert</div>
+                    <div class="event" onclick="selectEvent('Sports')">Sports</div>
+                    <div class="event" onclick="selectEvent('Theater')">Theater</div>
+                </div>
+                <button class="btn btn-primary mt-4" onclick="nextStep('select-seats')" style="display: none;" id="view-events-btn">Select Seats</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="select-seats" class="step" style="display: none;">
+                <h2>Select Seats for: <span id="selected-event"></span></h2>
+                <div class="seats">
+                    <!-- Simulated 20 seats -->
+                    <div class="seat" onclick="toggleSeat(this)">1</div>
+                    <div class="seat" onclick="toggleSeat(this)">2</div>
+                    <div class="seat" onclick="toggleSeat(this)">3</div>
+                    <div class="seat" onclick="toggleSeat(this)">4</div>
+                    <div class="seat" onclick="toggleSeat(this)">5</div>
+                    <div class="seat" onclick="toggleSeat(this)">6</div>
+                    <div class="seat" onclick="toggleSeat(this)">7</div>
+                    <div class="seat" onclick="toggleSeat(this)">8</div>
+                    <div class="seat" onclick="toggleSeat(this)">9</div>
+                    <div class="seat" onclick="toggleSeat(this)">10</div>
+                    <div class="seat" onclick="toggleSeat(this)">11</div>
+                    <div class="seat" onclick="toggleSeat(this)">12</div>
+                    <div class="seat" onclick="toggleSeat(this)">13</div>
+                    <div class="seat" onclick="toggleSeat(this)">14</div>
+                    <div class="seat" onclick="toggleSeat(this)">15</div>
+                    <div class="seat" onclick="toggleSeat(this)">16</div>
+                    <div class="seat" onclick="toggleSeat(this)">17</div>
+                    <div class="seat" onclick="toggleSeat(this)">18</div>
+                    <div class="seat" onclick="toggleSeat(this)">19</div>
+                    <div class="seat" onclick="toggleSeat(this)">20</div>
+                </div>
+                <button class="btn btn-primary mt-4" onclick="nextStep('cart')">Add to Cart</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="cart" class="step" style="display: none;">
+                <h2>Add to Cart</h2>
+                <p>Seats selected: <span id="cart-seats"></span></p>
+                <button class="btn btn-primary" onclick="nextStep('payment')">Proceed to Payment</button>
+                <button class="btn btn-secondary ml-2" onclick="prevStep()">Back</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="payment" class="step" style="display: none;">
+                <h2>Make Payment</h2>
+                <form id="payment-form">
+                    <input type="text" class="form-input" placeholder="Card Number" required>
+                    <input type="text" class="form-input" placeholder="Expiry Date" required>
+                    <input type="text" class="form-input" placeholder="CVV" required>
+                    <button type="submit" class="btn btn-primary mt-4">Pay Now</button>
+                </form>
+                <button class="btn btn-secondary ml-2" onclick="prevStep()">Back</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="payment-success" class="step" style="display: none;">
+                <h2>Payment Successful</h2>
+                <p>Your payment has been processed!</p>
+                <button class="btn btn-primary" onclick="nextStep('ticket')">Generate Ticket</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="ticket" class="step" style="display: none;">
+                <h2>Generate Ticket</h2>
+                <div class="ticket">
+                    <h3>Ticket Details</h3>
+                    <p>Event: <span id="ticket-event"></span></p>
+                    <p>Seats: <span id="ticket-seats"></span></p>
+                    <p>Total: $50</p>
+                    <div class="mt-4">
+                        <button class="btn btn-primary" onclick="nextStep('email')">Send Confirmation Email</button>
+                    </div>
+                </div>
+            </div>
+            <div class="arrow"></div>
+            <div id="email" class="step" style="display: none;">
+                <h2>Send Confirmation Email</h2>
+                <p>Enter your email to receive confirmation:</p>
+                <input type="email" class="form-input" id="email-input" placeholder="Email" required>
+                <button class="btn btn-primary mt-4" onclick="nextStep('end')">Send Email</button>
+            </div>
+            <div class="arrow"></div>
+            <div id="end" class="step" style="display: none;">
+                <h2>End</h2>
+                <p>Thank you for your purchase! Enjoy the event.</p>
+                <button class="btn btn-secondary" onclick="resetFlow()">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+</content>
+</create_file>
+
+<create_file>
+<path>styles.css</path>
+<content>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.flow-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+.step {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.3s;
+    width: 300px;
+    position: relative;
+    z-index: 1;
+}
+.step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+.step.active {
+    border: 3px solid #667eea;
+}
+.arrow {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 20px solid #fff;
+    margin: 10px auto;
+}
+.form-input {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+.btn-primary {
+    background: #667eea;
+    color: #fff;
+}
+.btn-primary:hover {
+    background: #5a67d8;
+}
+.btn-secondary {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+.btn-secondary:hover {
+    background: #cbd5e0;
+}
+.events {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.event {
+    flex: 1 1 200px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+}
+.seats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 10px;
+}
+.seat {
+    width: 40px;
+    height: 40px;
+    background: #e2e8f0;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.seat.selected {
+    background: #667eea;
+    color: #fff;
+}
+.ticket {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 400px;
+    margin: 20px auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+@media (max-width: 768px) {
+    .flow-chart {
+        gap: 10px;
+    }
+    .step {
+        width: 250px;
+        padding: 15px;
+    }
+}
+
+/* Connection Lines */
+.flow-chart::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    background: #fff;
+    height: 100%;
+}
+</content>
+</create_file>
+
+<create_file>
+<path>script.js</path>
+<content>
+let currentStep = 'start';
+let selectedEvent = '';
+let selectedSeats = [];
+
+function showStep(stepId) {
+    document.querySelectorAll('.step').forEach(el => el.style.display = 'none');
+    document.getElementById(stepId).style.display = 'block';
+}
+
+function nextStep(stepId) {
+    document.getElementById(currentStep).classList.remove('active');
+    currentStep = stepId;
+    document.getElementById(stepId).classList.add('active');
+    showStep(stepId);
+}
+
+function prevStep() {
+    // Simple back function based on current step
+    const steps = ['start', 'home', 'login', 'events', 'select-seats', 'cart', 'payment', 'payment-success', 'ticket', 'email', 'end'];
+    let currentIndex = steps.indexOf(currentStep);
+    if (currentIndex > 0) {
+        nextStep(steps[currentIndex - 1]);
+    }
+}
+
+function selectEvent(event) {
+    selectedEvent = event;
+    document.getElementById('selected-event').textContent = event;
+    document.getElementById('ticket-event').textContent = event;
+    document.getElementById('view-events-btn').style.display = 'block';
+}
+
+function toggleSeat(seat) {
+    if (seat.classList.contains('selected')) {
+        seat.classList.remove('selected');
+        selectedSeats = selectedSeats.filter(s => s !== seat.textContent);
+    } else {
+        seat.classList.add('selected');
+        selectedSeats.push(seat.textContent);
+    }
+    document.getElementById('cart-seats').textContent = selectedSeats.join(', ');
+    document.getElementById('ticket-seats').textContent = selectedSeats.join(', ');
+}
+
+function resetFlow() {
+    selectedEvent = '';
+    selectedSeats = [];
+    nextStep('start');
+}
+
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Simulated login
+    alert('Logged in successfully!');
+    nextStep('events');
+});
+
+document.getElementById('payment-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Simulated payment success
+    alert('Payment successful!');
+    nextStep('payment-success');
+});
+</content>
+</create_file>
